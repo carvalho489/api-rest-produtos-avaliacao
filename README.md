@@ -70,40 +70,37 @@ spring.jpa.show-sql=true
 spring.jpa.hibernate.ddl-auto=update # Cria/atualiza tabelas automaticamente
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 
+
 Executando a Aplicação
 
-1.  Navegue até o Diretório do Projeto:
-    - Abra seu terminal (Linux/macOS) ou prompt de comando (Windows).
-    - Use o comando ‘cd’ para navegar até a pasta raiz do projeto que você baixou do GitHub. É a pasta onde você encontra o arquivo ‘pom.xml’ e os scripts ‘mvnw’ e ‘mvnw.cmd’.
-     - Exemplo: ‘cd /caminho/para/sua/pasta/api-produtos’
+Sequência para preparar o .zip que veio do github:
 
-2.  Compile o Projeto:
-    - Este comando irá compilar todo o código-fonte, baixar as dependências necessárias (se ainda não o fez) e empacotar a aplicação em um arquivo executável.
-    - Digite o comando apropriado para o seu sistema operacional e pressione Enter:
-      
-        Para Linux/macOS:
-        $> ./mvnw clean install
+1 - Extraia o .zip baixado do GitHub numa pasta de sua preferência
+Abra seu terminal (Linux) ou cmd do (Windows)
+Use o comando ‘cd’ para navegar até a pasta raiz do projeto extraído. É a pasta onde você encontra o arquivo ‘pom.xml’
+e outros arquivos
 
-        Para Windows:
-        mvnw.cmd clean install
-        
-    - Aguarde até que o processo seja concluído. Você deverá ver a mensagem `BUILD SUCCESS` no final. Se houver algum erro, revise os passos anteriores, especialmente a instalação do JDK.
+2 - Invoque o Maven para criar a pasta .mvn, mvnw, mvnw.cmd etc...:
+$> mvn -N io.takari:maven:wrapper 
 
-3.  Inicie a API:
-    - Agora, vamos rodar o servidor da API!
-    - Digite o comando apropriado para o seu sistema operacional e pressione Enter:
+3 - Verifique se o Wrapper foi gerado:
+$> ls -l .mvn/wrapper  //Linux
+c:\ dir .mvn\wrapper\  //Window
 
-        Para Linux/macOS:
-        $> ./mvnw spring-boot:run
+4 - Obtenha as dependências, compile, instale, gere a pasta target e empacote a aplicação.
+Aguarde até que o processo seja concluído. Você deverá ver a mensagem `BUILD SUCCESS` no final. Se houver algum erro, revise os passos anteriores, especialmente a instalação do JDK:
+$> ./mvnw clean install    //Linux
+c:\ mvnw.cmd clean install //Window
 
-        Para Windows:
-        mvnw.cmd spring-boot:run
-        
-    - Aguarde. Você verá uma série de mensagens no terminal. Procure por uma linha que indique que o servidor Tomcat foi iniciado, geralmente algo como:
+5 - Inicie a API:
+$> ./mvnw spring-boot:run //Linux
+c:\ mvnw. cmd spring-boot:run
+
+Aguarde. Você verá uma série de mensagens no terminal. Procure por uma linha que indique que o servidor Tomcat foi iniciado, geralmente algo como:
         
        ‘ ...Tomcat started on port(s): 8080 (http) with context path...’
         
-- Isso significa que sua API está no ar e pronta para receber requisições!
+Isso significa que sua API está no ar e pronta para receber requisições!
 Mantenha este terminal aberto, pois ele está executando a API.
 
 Testando a API
