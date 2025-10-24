@@ -1,153 +1,182 @@
-API de Gerenciamento de Produtos
+# 🚀 API de Gerenciamento de Produtos
 
-API RESTful em Java com Spring Boot e Maven para gerenciar produtos (nome, preço, e categoria) e com banco de dados relacional MySQL.
+Esta é uma API RESTful desenvolvida em **Java** com **Spring Boot** e **Maven**, projetada para a gestão eficiente de produtos. A API interage com um banco de dados relacional **MySQL** para persistir informações como nome, preço e categoria dos produtos.
 
-Funcionalidades:
+## ✨ Funcionalidades
 
-- GET /api/produtos: Lista todos os produtos
-- GET /api/produtos/{id}: Busca produto por ID
-- POST /api/produtos: Cria novo produto
-- PUT /api/produtos/{id}: Atualiza produto
-- DELETE /api/produtos/{id}: Remove produto
+A API oferece os seguintes endpoints para gerenciamento de produtos e categorias:
 
-- GET /api/categorias: Lista todas os categorias
-- GET /api/categorias/{id}: Busca categoria por ID
-- POST /api/categorias: Cria nova  categoria
-- PUT /api/categorias/{id}: Atualiza  categoria
+### Endpoints de Produtos:
 
-Observações:
-O DELETE para categorias não está disponível nesta versão pois ainda não foram implementados os tratamentos de erros que impedem a exclusão de uma categoria eventualmente presente em algum produto. 
-Outras duas providências que também ainda não estão disponíveis nesta versão é impedir que um produto seja cadastrado ou editado com uma categoria inexistente. 
-Caso aconteça, será necessário editar a tabela ‘Produto’ manualmente no banco para inserir um ID válido da categoria dentro da tabela ‘Produto’ para que a aplicação volte a funcionar normalmente. 
+*   `GET /api/produtos`: Lista todos os produtos cadastrados.
+*   `GET /api/produtos/{id}`: Busca um produto específico pelo seu ID.
+*   `POST /api/produtos`: Cria um novo produto.
+*   `PUT /api/produtos/{id}`: Atualiza um produto existente.
+*   `DELETE /api/produtos/{id}`: Remove um produto pelo seu ID.
 
-Pré-requisitos
+### Endpoints de Categorias:
 
-Instale os seguintes softwares:
+*   `GET /api/categorias`: Lista todas as categorias cadastradas.
+*   `GET /api/categorias/{id}`: Busca uma categoria específica pelo seu ID.
+*   `POST /api/categorias`: Cria uma nova categoria.
+*   `PUT /api/categorias/{id}`: Atualiza uma categoria existente.
 
-1.  Java Development Kit (JDK) 1.8 (ou superior):
-- Verifique a instalação:
-$> java -version
+## ⚠️ Observações Importantes
 
-2.  Apache Maven (Opcional):
-    -  O projeto usa Maven Wrapper (‘mvnw’)
+É crucial ter ciência das seguintes limitações e comportamentos da API na sua versão atual:
 
-3.  MySQL 8:
-    - Durante a instalação, defina a senha para o usuário ‘root’.
+*   **`DELETE` de Categorias:** A funcionalidade de exclusão (`DELETE`) para categorias **não está disponível**. Isso se deve à necessidade de implementar tratamentos de erros adequados que impeçam a remoção de categorias que possam estar associadas a produtos existentes. A exclusão de uma categoria em uso poderia levar a inconsistências nos dados.
+*   **Integridade Referencial de Categorias:**
+    *   Não há validação para impedir que um produto seja cadastrado ou editado com uma categoria inexistente.
+    *   **Caso ocorra**, será necessário **editar manualmente** a tabela `Produto` diretamente no banco de dados para inserir um `ID` válido de categoria. Essa ação é fundamental para restaurar o funcionamento normal da aplicação.
 
-Configuração do Banco de Dados
+## 🛠️ Pré-requisitos
 
-Prepare o banco de dados ‘bdprodutosapi’ e o usuário ‘api_user’ no MySQL 8:
+Para que a aplicação funcione corretamente, você precisará ter os seguintes softwares instalados:
 
-1.  Acesse o MySQL:
-        $> mysql -u root -p
-    
-    (Digite a senha do ‘root’ quando solicitado)
+*   **Java Development Kit (JDK) 1.8** (ou versão superior):
+    *   Para verificar a instalação, execute no terminal:
+        ```bash
+        java -version
+        ```
+*   **Apache Maven** (Opcional):
+    *   O projeto utiliza o Maven Wrapper (`mvnw`), que facilita a execução de comandos Maven sem a necessidade de uma instalação global do Apache Maven.
+*   **MySQL 8**:
+    *   Durante a instalação, é **essencial** que você defina uma senha para o usuário `root`.
 
-2.  Crie o Banco de Dados:
-    sql → CREATE DATABASE bdprodutosapi;
-    
-3.  Crie Usuário e Conceda Permissões:
-    sql → CREATE USER 'api_user'@'localhost' IDENTIFIED BY 'sua_senha_segura';
+## ⚙️ Configuração do Banco de Dados
+
+Siga os passos abaixo para preparar o banco de dados `bdprodutosapi` e o usuário `api_user` no MySQL 8:
+
+1.  **Acesse o MySQL:**
+    ```bash
+    mysql -u root -p
+    # Digite a senha do 'root' quando solicitado
+    ```
+2.  **Crie o Banco de Dados:**
+    ```sql
+    CREATE DATABASE bdprodutosapi;
+    ```
+3.  **Crie Usuário e Conceda Permissões:**
+    ```sql
+    CREATE USER 'api_user'@'localhost' IDENTIFIED BY 'sua_senha_segura';
     GRANT ALL PRIVILEGES ON bdprodutosapi.* TO 'api_user'@'localhost';
     FLUSH PRIVILEGES;
-    
-    ATENÇÃO: Substitua ‘sua_senha_segura’ por uma senha forte de sua escolha.
+    ```
+    > **ATENÇÃO:** Substitua `sua_senha_segura` por uma senha forte e segura de sua escolha.
 
-4.  Saia do MySQL:
-    sql → EXIT;
+4.  **Saia do MySQL:**
+    ```sql
+    EXIT;
+    ```
 
+## 🖥️ Configuração da Aplicação
 
-Configuração da Aplicação
+Após configurar o banco de dados, você precisará ajustar as credenciais no arquivo de propriedades da aplicação:
 
-Edite o arquivo ‘src/main/resources/application.properties’:
+*   Edite o arquivo `src/main/resources/application.properties` com as seguintes configurações (certifique-se de substituir `sua_senha_segura` pela senha real do `api_user` que você definiu):
 
-# database configs
-spring.datasource.url=jdbc:mysql://localhost:3306/bdprodutosapi?useSSL=false&serverTimezone=UTC
-spring.datasource.username=api_user
-spring.datasource.password=sua_senha_segura # SUBSTITUA PELA SENHA REAL DO SEU api_user
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.jpa.show-sql=true
-spring.jpa.hibernate.ddl-auto=update # Cria/atualiza tabelas automaticamente
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+    ```properties
+    # Database Configuration
+    spring.datasource.url=jdbc:mysql://localhost:3306/bdprodutosapi?useSSL=false&serverTimezone=UTC
+    spring.datasource.username=api_user
+    spring.datasource.password=sua_senha_segura # SUBSTITUA PELA SENHA REAL DO SEU api_user
+    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
+    # JPA and Hibernate Configuration
+    spring.jpa.show-sql=true
+    spring.jpa.hibernate.ddl-auto=update # Cria/atualiza tabelas automaticamente
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+    ```
 
-Executando a Aplicação
+## ▶️ Executando a Aplicação
 
-Sequência para preparar o .zip que veio do github:
+Siga esta sequência para preparar e iniciar sua API, partindo do `.zip` baixado do GitHub:
 
-1 - Extraia o .zip baixado do GitHub numa pasta de sua preferência
-Abra seu terminal (Linux) ou cmd do (Windows)
-Use o comando ‘cd’ para navegar até a pasta raiz do projeto extraído. É a pasta onde você encontra o arquivo ‘pom.xml’
-e outros arquivos
+1.  **Extração e Navegação:**
+    *   Extraia o conteúdo do `.zip` em uma pasta de sua preferência.
+    *   Abra o terminal (Linux/macOS) ou o Prompt de Comando/PowerShell (Windows).
+    *   Navegue até a pasta raiz do projeto extraído, que é onde se encontra o arquivo `pom.xml`. Exemplo:
+        ```bash
+        cd /caminho/para/sua/pasta/do/projeto
+        ```
+2.  **Invocando o Maven Wrapper:**
+    *   Gere os arquivos do Maven Wrapper (`.mvn`, `mvnw`, `mvnw.cmd`):
+        ```bash
+        mvn -N io.takari:maven:wrapper
+        ```
+3.  **Verificação do Wrapper (Opcional):**
+    *   Confirme que os arquivos do Wrapper foram gerados:
+        *   Linux/macOS:
+            ```bash
+            ls -l .mvn/wrapper
+            ```
+        *   Windows:
+            ```bash
+            dir .mvn\wrapper\
+            ```
+4.  **Obtenção de Dependências e Empacotamento:**
+    *   Obtenha as dependências, compile, instale e empacote a aplicação. Aguarde até ver a mensagem `BUILD SUCCESS` no final. Se houver erros, revise a instalação do JDK.
+        *   Linux/macOS:
+            ```bash
+            ./mvnw clean install
+            ```
+        *   Windows:
+            ```bash
+            mvnw.cmd clean install
+            ```
+5.  **Iniciando a API:**
+    *   Inicie a aplicação Spring Boot. Mantenha este terminal aberto, pois ele estará executando a API.
+        *   Linux/macOS:
+            ```bash
+            ./mvnw spring-boot:run
+            ```
+        *   Windows:
+            ```bash
+            mvnw.cmd spring-boot:run
+            ```
+    *   Aguarde até ver uma mensagem similar a: `...Tomcat started on port(s): 8080 (http) with context path...` Isso indica que sua API está no ar e pronta para receber requisições!
 
-2 - Invoque o Maven para criar a pasta .mvn, mvnw, mvnw.cmd etc...:
-$> mvn -N io.takari:maven:wrapper 
+## �� Testando a API
 
-3 - Verifique se o Wrapper foi gerado:
-$> ls -l .mvn/wrapper  //Linux
-c:\ dir .mvn\wrapper\  //Window
+Com a API em execução (o terminal do passo anterior deve estar ativo), você pode testar os endpoints usando ferramentas como Postman, seu navegador ou, como exemplificado abaixo, via `curl` no terminal.
 
-4 - Obtenha as dependências, compile, instale, gere a pasta target e empacote a aplicação.
-Aguarde até que o processo seja concluído. Você deverá ver a mensagem `BUILD SUCCESS` no final. Se houver algum erro, revise os passos anteriores, especialmente a instalação do JDK:
-$> ./mvnw clean install    //Linux
-c:\ mvnw.cmd clean install //Window
+*   A base da URL para todos os endpoints será: `http://localhost:8080/api`.
 
-5 - Inicie a API:
-$> ./mvnw spring-boot:run //Linux
-c:\ mvnw. cmd spring-boot:run
+> Os parâmetros `-s`, `|` e `jq` nos exemplos de `curl` são usados para tornar a saída no terminal mais legível e amigável. Certifique-se de ter o `jq` instalado (ferramenta de linha de comando para processar JSON).
 
-Aguarde. Você verá uma série de mensagens no terminal. Procure por uma linha que indique que o servidor Tomcat foi iniciado, geralmente algo como:
-        
-       ‘ ...Tomcat started on port(s): 8080 (http) with context path...’
-        
-Isso significa que sua API está no ar e pronta para receber requisições!
-Mantenha este terminal aberto, pois ele está executando a API.
+### Exemplos de Requisições com `curl` (para Produtos):
 
-Testando a API
+*   **`GET /api/produtos`** (Lista todos os produtos)
+    ```bash
+    curl -s -X GET http://localhost:8080/api/produtos | jq
+    ```
+*   **`GET /api/produtos/{id}`** (Busca produto por ID)
+    ```bash
+    curl -s -X GET http://localhost:8080/api/produtos/1 | jq
+    ```
+*   **`POST /api/produtos`** (Cria novo produto)
+    ```bash
+    curl -s -X POST http://localhost:8080/api/produtos \
+         -H "Content-Type: application/json" \
+         -d '{ "nome": "Produto Qualquer", "preco": 789.00, "categoria": { "id" : 2 } }' | jq
+    ```
+    > **ATENÇÃO:** O `ID` da categoria (no exemplo acima) **deve ser válido** e estar presente na tabela `Categoria` do seu banco de dados.
 
-A base da URL para todos os endpoints será ‘http://localhost:8080/api/produtos’.
+*   **`PUT /api/produtos/{id}`** (Atualiza produto)
+    ```bash
+    curl -s -X PUT http://localhost:8080/api/produtos/1 \
+         -H "Content-Type: application/json" \
+         -d '{ "nome": "Produto Um Atualizado", "preco": 1000.00, "categoria": { "id" : 2 } }' | jq
+    ```
+    > **ATENÇÃO:** O `ID` da categoria (no exemplo acima) **deve ser válido** e estar presente na tabela `Categoria` do seu banco de dados.
 
-Com a API em execução (o terminal do passo anterior deve estar aberto), você pode testar os endpoints usando seu navegador ou ferramentas como [Postman](https://www.postman.com/downloads/)
+*   **`DELETE /api/produtos/{id}`** (Remove produto)
+    ```bash
+    curl -s -X DELETE http://localhost:8080/api/produtos/1 | jq
+    ```
 
- Aqui vamos utilizar o `curl` no terminal.
+> Os comandos acima podem ser facilmente adaptados para interagir com os endpoints de **Categorias** (substituindo `/api/produtos` por `/api/categorias`, e ajustando os dados JSON conforme necessário para `POST`/`PUT`).
 
-Comandos do curl para API: 
-Os parâmetros ‘-s’, ‘|’ e ‘jq’  são utilizados para tornar a saída no terminal mais legíveis e amigáveis.
-Os comandos abaixo se referem à ‘Produto’ mas podem ser facilmente convertidos para ‘Categorias’.
+---
 
-- GET /api/produtos → lista todos os produtos
-$> curl -s -X GET http://localhost:8080/produtos | jq
-
-- GET /api/produtos/{id} → busca produto por id
-$> curl -s -X GET http://localhost:8080/produtos/1 | jq
-
-- POST /api/produtos → cria novo produto
-$> curl -s -X POST http://localhost:8080/produtos/ \
-     -H "Content-Type: application/json" \
-     -d '{
-           "nome": "Produto Qualquer",
-           "preco": 789.00,
-           "categoria": { 
-           		"id" : 2
-           }
-         }' | jq
-
-ATENÇÃO: O ID da categoria (acima) tem que ser válido (presente na tabela ‘Categoria’)!
-
-- PUT /api/produtos/{id} → atualiza produto
-$> curl -s -X PUT http://localhost:8080/produtos/1 \
-     -H "Content-Type: application/json" \
-     -d '{
-           "nome": "Produto Um",
-           "preco": 1000.00,
-           "categoria": { 
-           		"id" : 2
-           }
-         }' | jq
-
-ATENÇÃO: O ID da categoria (acima) tem que ser válido (presente na tabela ‘Categoria’)!
-
-- DELETE /api/produtos/{id} → remove produto
-$> curl -s -X DELETE http://localhost:8080/produtos/1 | jq
-
-Os comandos acima podem ser facilmente adaptados para as ‘Categorias’.
